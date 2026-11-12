@@ -21,7 +21,6 @@ class Player(CircleShape):
         return [a, b, c]
 
     def draw(self, screen: pygame.Surface) -> None:
-        # must override
         pygame.draw.polygon(screen, "white", self.triangle(), LINE_WIDTH)
 
     def rotate(self, dt: float):
