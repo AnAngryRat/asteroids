@@ -3,8 +3,9 @@ from pygame.time import Clock
 from asteroidfield import AsteroidField
 from asteroids import Asteroids
 import constants
-from logger import log_state
+from logger import log_state, log_event
 from player import Player
+import sys
 
 SCREEN_WIDTH = constants.SCREEN_WIDTH
 SCREEN_HEIGHT = constants.SCREEN_HEIGHT
@@ -22,7 +23,7 @@ def main():
     Asteroids.containers = (updatable, drawable, asteroids)
     AsteroidField.containers = (updatable)
     AsteroidField()
-    Player(SCREEN_WIDTH / 2 ,SCREEN_HEIGHT /2, PLAYER_RADIUS)
+    player = Player(SCREEN_WIDTH / 2 ,SCREEN_HEIGHT /2, PLAYER_RADIUS)
 
 
     while True:
@@ -32,6 +33,11 @@ def main():
                 return
         screen.fill("black")
         updatable.update(dt)
+        for i in asteroids:
+            if i.collides_with(player) == True:
+                log_event("player_hit")
+                print("Game Over!")
+                sys.exit()
         for i in drawable:
             i.draw(screen)
         pygame.display.flip()
