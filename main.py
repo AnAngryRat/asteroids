@@ -7,6 +7,7 @@ import constants
 from logger import log_state, log_event
 from player import Player
 from lives import Lives
+from score import Score
 import sys
 from shot import Shot
 
@@ -24,17 +25,19 @@ def initializeGame():
     AsteroidField.containers = (updatable)
     Shot.containers = (updatable,drawable, shots)
     Lives.containers = (updatable, drawable)
+    Score.containers = (updatable, drawable)
     AsteroidField()
     player = Player(SCREEN_WIDTH / 2 ,SCREEN_HEIGHT /2, PLAYER_RADIUS)
     lives = Lives(SCREEN_WIDTH / 15, SCREEN_HEIGHT / 20)
-    return player, updatable, drawable, shots, asteroids, lives
+    score = Score(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 20)
+    return player, updatable, drawable, shots, asteroids, lives, score
 
 async def main():
     pygame.init()
     screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
     clock = pygame.time.Clock()
     dt = 0.0
-    player, updatable, drawable, shots, asteroids, lives = initializeGame()
+    player, updatable, drawable, shots, asteroids, lives, score = initializeGame()
     game_over = False
 
 
@@ -44,7 +47,7 @@ async def main():
             if event.type == pygame.QUIT:
                 return
             if game_over and event.type == pygame.KEYDOWN and event.key == pygame.K_RETURN:
-                player, updatable, drawable, shots, asteroids, lives = initializeGame()
+                player, updatable, drawable, shots, asteroids, lives, score = initializeGame()
                 game_over = False
         screen.fill("black")
         if not game_over:
@@ -62,6 +65,7 @@ async def main():
                         #log_event("asteroid_shot")
                         s.kill()
                         i.split()
+                        score.inc()
 
         for i in drawable:
             i.draw(screen)
