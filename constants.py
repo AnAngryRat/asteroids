@@ -11,3 +11,15 @@ ASTEROID_MAX_RADIUS = ASTEROID_MIN_RADIUS * ASTEROID_KINDS
 SHOT_RADIUS = 5
 PLAYER_SHOOT_SPEED = 500
 SHOT_COOLDOWN = 0.3
+LIVES = 3
+SCORE = 0
+HEART_POINTS = [
+    (0, 10),
+    (-15, -5),
+    (-15, -15),
+    (-10, -20),
+    (0, -12),
+    (10, -20),
+    (15, -15),
+    (15, -5),
+]

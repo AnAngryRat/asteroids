@@ -6,6 +6,7 @@ from asteroids import Asteroids
 import constants
 from logger import log_state, log_event
 from player import Player
+from lives import Lives
 import sys
 from shot import Shot
 
@@ -22,16 +23,18 @@ def initializeGame():
     Asteroids.containers = (updatable, drawable, asteroids)
     AsteroidField.containers = (updatable)
     Shot.containers = (updatable,drawable, shots)
+    Lives.containers = (updatable, drawable)
     AsteroidField()
     player = Player(SCREEN_WIDTH / 2 ,SCREEN_HEIGHT /2, PLAYER_RADIUS)
-    return player, updatable, drawable, shots, asteroids
+    lives = Lives(SCREEN_WIDTH / 15, SCREEN_HEIGHT / 20)
+    return player, updatable, drawable, shots, asteroids, lives
 
 async def main():
     pygame.init()
     screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
     clock = pygame.time.Clock()
     dt = 0.0
-    player, updatable, drawable, shots, asteroids = initializeGame()
+    player, updatable, drawable, shots, asteroids, lives = initializeGame()
     game_over = False
 
 
@@ -41,17 +44,19 @@ async def main():
             if event.type == pygame.QUIT:
                 return
             if game_over and event.type == pygame.KEYDOWN and event.key == pygame.K_RETURN:
-                player, updatable, drawable, shots, asteroids = initializeGame()
+                player, updatable, drawable, shots, asteroids, lives = initializeGame()
                 game_over = False
         screen.fill("black")
         if not game_over:
             updatable.update(dt)
             for i in asteroids:
-                if i.collides_with(player) == True:
+                if player.invulTimer<=0 and i.collides_with(player) == True:
                     #log_event("player_hit")
-                    print("Game Over!")
-                    game_over = True
-                    break
+                    lives.hit()
+                    player.hit()
+                    if lives.dead():
+                        game_over = True
+                        break
                 for s in shots:
                     if s.collides_with(i) == True:
                         #log_event("asteroid_shot")
